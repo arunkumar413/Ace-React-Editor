@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
 import AceEditor from "react-ace";
+import FolderTree, { testData } from "react-folder-tree";
 
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-css";
@@ -18,6 +19,24 @@ export default function App() {
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedFileContent, setSelectedFileContent] = useState("");
   const [fileIndex, setFileIndex] = useState(0);
+
+  const treeState = {
+    name: "my-app",
+    checked: 0.5, // half check: some children are checked
+    isOpen: true, // this folder is opened, we can see it's children
+    children: [
+      { name: "public", checked: 0  },
+      {
+        name: "src",
+        checked: 0.5,
+        isOpen: false,
+        children: [
+          { name: "app.js", checked: 0 },
+          { name: "index.js ", checked: 1 },
+        ],
+      },
+    ],
+  };
 
   function handleChange(newCode) {
     console.log(newCode);
@@ -37,6 +56,10 @@ export default function App() {
     setFileIndex(index);
 
     console.log(item.fileName);
+  }
+
+  function onTreeStateChange(state) {
+    console.log(state);
   }
 
   useEffect(
@@ -61,7 +84,14 @@ export default function App() {
 
   return (
     <div className="grid-container">
-      <aside className="sidebar-container">{asideElements}</aside>
+      <aside className="sidebar-container">
+        {" "}
+        <FolderTree
+          data={treeState}
+          onChange={onTreeStateChange}
+          showCheckbox={false} // default: true
+        />
+      </aside>
 
       <AceEditor
         value={files[fileIndex].content}

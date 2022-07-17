@@ -1,26 +1,62 @@
-h1,
-p {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-}
-
 .grid-container {
   display: grid;
   grid-template-columns: 2fr 10fr;
   justify-content: center;
   align-items: flex-start;
+  font-family: sans-serif;
 }
 
 .sidebar-container {
-  display: grid;
+  /* display: grid;
   grid-template-columns: 1fr;
   justify-content: center;
-  align-items: flex-start;
-  max-height: 300px;
+  align-items: flex-start; */
   overflow-y: scroll;
+  overflow: scroll;
 }
-.sidebar-container span {
+/* .sidebar-container span {
   padding: 0.2rem;
   font-size: 16;
   font-family: sans-serif;
+} */
+
+.file {
+  font-size: 1rem;
+}
+
+.file:hover {
+  background-color: lightgrey;
+  border-radius: 5px;
+}
+
+.dir {
+  font-size: 1.2rem;
+  color: black;
+  font-weight: bold;
+}
+
+.dir:hover {
+  background-color: lightgrey;
+  border-radius: 10px;
+}
+
+.file-actions:hover {
+  /* display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-evenly; */
+}
+
+.edit-icon {
+  fill: purple;
+  cursor: pointer;
+  margin-left: 5px;
+}
+.edit-icon:hover {
+  border-radius: 50%;
+}
+
+.delete-icon {
+  fill: red;
+  cursor: pointer;
+  margin-left: 5px;
 }

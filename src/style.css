@@ -22,11 +22,11 @@
 
 .file {
   font-size: 1rem;
+  width: max-content;
 }
 
 .file:hover {
   background-color: lightgrey;
-  border-radius: 5px;
 }
 
 .dir {
@@ -36,7 +36,6 @@
 }
 
 .dir:hover {
-  background-color: lightgrey;
   border-radius: 10px;
 }
 
@@ -60,3 +59,29 @@
   cursor: pointer;
   margin-left: 5px;
 }
+
+.ReNameModal {
+  display: none;
+  width: 300px;
+  height: 400px;
+  display: grid;
+  grid-template-columns: 1fr;
+  position: fixed;
+  z-index: 9999;
+  top: 20%;
+  left: 20%;
+  background-color: gainsboro;
+}
+
+.input-rename {
+  display: none;
+}
+.rename-input {
+  display: none;
+}
+
+.ReNameModal {
+  
+
+}
+

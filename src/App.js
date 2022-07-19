@@ -8,20 +8,21 @@ import {
   Tree,
   StaticTreeDataProvider,
 } from "react-complex-tree";
+import {
+  RecoilRoot,
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+} from "recoil";
 import "react-complex-tree/lib/style.css";
 import { ReactComponent as DeleteIcon } from "./icons/deleteIcon.svg";
 import { ReactComponent as EditIcon } from "./icons/editIcon.svg";
 
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/mode-css";
-import "ace-builds/src-noconflict/mode-html";
-
-import "ace-builds/src-noconflict/theme-github";
-import "ace-builds/src-noconflict/ext-language_tools";
 import { ReNameModal } from "./components/ReNameModal";
+import { ACEeditor } from "./components/AceEditor";
 
 export default function App() {
-  const [fileSystem, setFileSystem] = useState({});
   const [files, setFiles] = useState([
     { fileName: "firstFile.js", content: "first file content" },
     { fileName: "secondFile.js", content: "second file content" },
@@ -32,6 +33,7 @@ export default function App() {
   const [fileIndex, setFileIndex] = useState(0);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState({});
+  const { fileSystem } = useRecoilValue(fileSystemTree);
 
   function handleChange(newCode) {
     const newState = files.map(function (item, index) {
@@ -61,17 +63,6 @@ export default function App() {
       </span>
     );
   });
-
-  useEffect(function () {
-    async function getFileSystem() {
-      let res = await fetch("http://localhost:5000/getdirtree");
-      let data = await res.json();
-
-      setFileSystem(data);
-    }
-
-    getFileSystem();
-  }, []);
 
   var elements = [];
   var count = 0;
@@ -120,24 +111,6 @@ export default function App() {
     // inp.style.display = "inline";
     // let nameSpan = document.querySelector("#" + "name" + tree.id);
     // nameSpan.style.display = "none";
-  }
-
-  function updateTree(evt, tree) {
-    function traverseNode(node) {
-      if (node.path === evt.target.value) {
-        node.name = evt.target.value;
-      }
-      if (node.children && node.children.length) {
-        node.children.forEach(function (item) {
-          traverseNode(item);
-        });
-      }
-    }
-
-    let tempTree = fileSystem;
-
-    traverseNode(tempTree);
-    setFileSystem(tempTree);
   }
 
   function stopPropagation(evt) {
@@ -234,28 +207,7 @@ export default function App() {
   return (
     <div className="grid-container">
       <aside className="sidebar-container">{elements}</aside>
-
-      <AceEditor
-        value={files[fileIndex].content}
-        height="90vh"
-        mode="javascript"
-        fontSize={16}
-        enableBasicAutocompletion={true}
-        enableLiveAutocompletion={true}
-        highlightActiveLine={true}
-        enableSnippets={true}
-        theme="github"
-        onChange={handleChange}
-        name="UNIQUE_ID_OF_DIV"
-        editorProps={{
-          $blockScrolling: true,
-        }}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
-          enableSnippets: true,
-        }}
-      />
+      <ACEeditor />
       <ReNameModal
         isModalOpen={isModalOpen}
         setModalState={setModalOpen}

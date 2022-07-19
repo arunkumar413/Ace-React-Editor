@@ -46,6 +46,7 @@ export function ReNameModal(props) {
       </div>
       <div className="modal-content">
         <input
+          value={newFileName}
           onChange={handleChange}
           placeholder="New file name"
           name="rename"

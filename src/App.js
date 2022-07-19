@@ -31,7 +31,7 @@ export default function App() {
   const [selectedFileContent, setSelectedFileContent] = useState("");
   const [fileIndex, setFileIndex] = useState(0);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedNode, setSelectedNode] = useState("");
+  const [selectedNode, setSelectedNode] = useState({});
 
   function handleChange(newCode) {
     const newState = files.map(function (item, index) {
@@ -112,15 +112,14 @@ export default function App() {
     console.log("clicked");
     evt.stopPropagation();
     evt.preventDefault();
-    evt.target.style.pointerEvents = "none";
 
-    setSelectedNode(tree.id);
+    setSelectedNode(tree);
     console.log(tree.type);
     setModalOpen(true);
-    let inp = document.querySelector("#" + "input" + tree.id);
-    inp.style.display = "inline";
-    let nameSpan = document.querySelector("#" + "name" + tree.id);
-    nameSpan.style.display = "none";
+    // let inp = document.querySelector("#" + "input" + tree.id);
+    // inp.style.display = "inline";
+    // let nameSpan = document.querySelector("#" + "name" + tree.id);
+    // nameSpan.style.display = "none";
   }
 
   function updateTree(evt, tree) {
@@ -257,7 +256,11 @@ export default function App() {
           enableSnippets: true,
         }}
       />
-      <ReNameModal isModalOpen={isModalOpen} setModalState={setModalOpen} />
+      <ReNameModal
+        isModalOpen={isModalOpen}
+        setModalState={setModalOpen}
+        selectedItem={selectedNode}
+      />
     </div>
   );
 }

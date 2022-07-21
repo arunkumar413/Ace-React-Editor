@@ -3,6 +3,8 @@ import "./style.css";
 import AceEditor from "react-ace";
 // import FolderTree, { testData } from "react-folder-tree";
 // "react-folder-tree": "^5.0.3"
+import { useSelector, useDispatch } from "react-redux";
+
 import {
   UncontrolledTreeEnvironment,
   Tree,
@@ -16,13 +18,19 @@ import {
   useRecoilValue,
 } from "recoil";
 import "react-complex-tree/lib/style.css";
+// import { store } from "./app/store";
+import { Provider } from "react-redux";
 import { ReactComponent as DeleteIcon } from "./icons/deleteIcon.svg";
 import { ReactComponent as EditIcon } from "./icons/editIcon.svg";
 
 import { ReNameModal } from "./components/ReNameModal";
 import { ACEeditor } from "./components/AceEditor";
+import { fileSystemTree } from "./components/AceEditor";
+import { getFileSystem } from "./stateManagement/counterSlice";
 
 export default function App() {
+  const dispatch = useDispatch();
+
   const [files, setFiles] = useState([
     { fileName: "firstFile.js", content: "first file content" },
     { fileName: "secondFile.js", content: "second file content" },
@@ -33,7 +41,7 @@ export default function App() {
   const [fileIndex, setFileIndex] = useState(0);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState({});
-  const { fileSystem } = useRecoilValue(fileSystemTree);
+  const fileSystem = useRecoilValue(fileSystemTree);
 
   function handleChange(newCode) {
     const newState = files.map(function (item, index) {
@@ -203,6 +211,10 @@ export default function App() {
   }
 
   parse(fileSystem);
+
+  useEffect(function () {
+    dispatch(getFileSystem());
+  }, []);
 
   return (
     <div className="grid-container">

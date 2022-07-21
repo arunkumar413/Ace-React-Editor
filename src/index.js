@@ -7,6 +7,8 @@ import {
   useRecoilValue,
 } from "recoil";
 import { createRoot } from "react-dom/client";
+import { fileStore } from "./stateManagement/store";
+import { Provider } from "react-redux";
 
 import App from "./App";
 
@@ -15,8 +17,10 @@ const root = createRoot(rootElement);
 
 root.render(
   <StrictMode>
-    <RecoilRoot>
-      <App />
-    </RecoilRoot>
+    <Provider store={fileStore}>
+      <RecoilRoot>
+        <App />
+      </RecoilRoot>
+    </Provider>
   </StrictMode>
 );

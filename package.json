@@ -11,7 +11,8 @@
     "react-complex-tree": "^1.1.9",
     "react-dom": "^18.1.0",
     "react-redux": "^8.0.2",
-    "recoil": "^0.7.4"
+    "recoil": "^0.7.4",
+    "react-uuid": "^1.0.2"
   },
   "scripts": {
     "start": "react-scripts start",

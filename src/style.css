@@ -14,36 +14,7 @@
   overflow-y: scroll;
   overflow: scroll;
 }
-/* .sidebar-container span {
-  padding: 0.2rem;
-  font-size: 16;
-  font-family: sans-serif;
-} */
 
-.file {
-  font-size: 1rem;
-  width: max-content;
-}
-
-.file:hover {
-  background-color: lightgrey;
-}
-
-.dir {
-  font-size: 1.2rem;
-  color: black;
-  font-weight: bold;
-}
-
-.dir:hover {
-  border-radius: 10px;
-}
-
-.file-actions:hover {
-  /* display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  justify-content: space-evenly; */
-}
 
 .edit-icon {
   fill: purple;
@@ -116,4 +87,57 @@
   font-size: 1rem;
   padding: 0.5rem;
   border: none;
+}
+
+
+
+.dir {
+  /* font-weight: bold; */
+  color: black;
+  margin-left: 5px;
+  padding: 5px;
+  line-height: 16px;
+}
+
+.dir-heading {
+  padding: 0.3rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.dir-heading:hover {
+}
+
+.icon-container {
+  display: none;
+}
+
+.file {
+  font-size: 1rem;
+  padding: 0.3rem;
+  border-radius: 5px;
+
+  font-weight: normal;
+}
+
+.file:hover {
+  background-color: lightgrey;
+}
+
+.icon {
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+  vertical-align: middle;
+}
+
+.bi-folder-fill {
+  color: blue;
+}
+
+/* .dir>span {
+  display: none;
+} */
+
+.file-icon-container {
+  display: none;
 }

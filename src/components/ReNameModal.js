@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setFileSystem } from "../stateManagement/counterSlice";
 
 export function ReNameModal(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newFileName, setNewFileName] = useState("");
+  const dispatch = useDispatch();
 
   function handleCloseModal() {
     setNewFileName("");
@@ -23,6 +26,9 @@ export function ReNameModal(props) {
         "Content-Type": "application/json",
       },
     });
+
+    let data = await res.json();
+    dispatch(setFileSystem(data));
 
     // props.setModalState(false);
     setNewFileName("");

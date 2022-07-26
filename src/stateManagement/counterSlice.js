@@ -2,19 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const fileSystemSlice = createSlice({
   name: "fileInfo",
-  initialState: {
-    fileSystem: null,
-  },
+  initialState: {},
   reducers: {
-    getFileSystem: async function (state) {
-      let res = await fetch("http://localhost:5000/getdirtree");
-
-      let data = await res.json();
-      state.fileSystem = data;
+    setFileSystem: function (state, action) {
+      state.fileSystem = action.payload;
     },
   },
 });
 
 export const fileSystemReducer = fileSystemSlice.reducer;
 
-export const { getFileSystem } = fileSystemSlice.actions;
+export const { setFileSystem } = fileSystemSlice.actions;

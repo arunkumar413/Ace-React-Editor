@@ -58,7 +58,7 @@ export default function App() {
     setFileIndex(index);
   }
 
-  function onTreeStateChange(state) {}
+  function onTreeStateChange(state) { }
 
   const asideElements = files.map(function (item, index) {
     return (

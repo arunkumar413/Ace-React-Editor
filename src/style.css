@@ -15,7 +15,6 @@
   overflow: scroll;
 }
 
-
 .edit-icon {
   fill: purple;
   cursor: pointer;
@@ -89,8 +88,6 @@
   border: none;
 }
 
-
-
 .dir {
   /* font-weight: bold; */
   color: black;
@@ -100,7 +97,7 @@
 }
 
 .dir-heading {
-  padding: 0.3rem;
+  /* padding: 0.3rem; */
   border-radius: 5px;
   font-weight: bold;
 }
@@ -116,7 +113,6 @@
   font-size: 1rem;
   padding: 0.3rem;
   border-radius: 5px;
-
   font-weight: normal;
 }
 

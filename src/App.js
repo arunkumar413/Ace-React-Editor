@@ -132,7 +132,8 @@ export default function App() {
     debugger;
   }
 
-  function editNodeName(node) {
+  function editNodeName(node, type) {
+    debugger;
     setModalOpen(true);
     node.type === "directory"
       ? setModalHeading("Edit directory name")
@@ -140,6 +141,7 @@ export default function App() {
 
     setSelectedNode(node);
     setModalMethod("PUT");
+    setNodeType(type);
   }
 
   function addNewNode(node, type) {
@@ -151,6 +153,24 @@ export default function App() {
     setSelectedNode(node);
     setModalMethod("POST");
     setNodeType(type);
+  }
+
+  async function handleSelectFile(node) {
+    debugger;
+    let res = await fetch(
+      "http://localhost:5000/get-file-content?path=" + node.path,
+      {
+        method: "GET",
+        // body: JSON.stringify({
+        //   path: node.path,
+        // }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    let fileContent = await res.json();
+    setSelectedFileContent(fileContent);
   }
 
   function buildTree(node, level = 1) {
@@ -176,7 +196,7 @@ export default function App() {
               <FolderPlusIcon onClick={(evt) => addNewNode(node, "dir")} />
               <FilePlusIcon onClick={(evt) => addNewNode(node, "file")} />
 
-              <EditIcon onClick={(evt) => editNodeName(node)} />
+              <EditIcon onClick={(evt) => editNodeName(node, "dir")} />
               <DeleteIcon />
             </span>
           </span>
@@ -186,6 +206,7 @@ export default function App() {
     } else if (node.type === "file") {
       return (
         <div
+          onClick={(evt) => handleSelectFile(node)}
           key={uuid()}
           style={{ paddingLeft: level * 10 + 5 }}
           onMouseEnter={handleDisplayFileIcons}
@@ -197,7 +218,7 @@ export default function App() {
             {/* <FolderPlusIcon onClick={(evt) => addNewNode(node, "dir")} />
             <FilePlusIcon onClick={(evt) => addNewNode(node, "file")} /> */}
 
-            <EditIcon onClick={(evt) => editNodeName(node)} />
+            <EditIcon onClick={(evt) => editNodeName(node, "file")} />
             <DeleteIcon />
           </span>
         </div>

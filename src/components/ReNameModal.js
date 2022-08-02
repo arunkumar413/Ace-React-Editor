@@ -14,7 +14,6 @@ export function ReNameModal(props) {
   }
 
   async function addNewFile() {
-    debugger;
     let res = await fetch("http://localhost:5000/add-new-file", {
       method: props.modalMethod,
       body: JSON.stringify({
@@ -29,9 +28,11 @@ export function ReNameModal(props) {
     let data = await res.json();
     dispatch(setFileSystem(data));
     setNewFileName("");
+    props.setModalState(false);
   }
 
   async function editFileName() {
+    debugger;
     let res = await fetch("http://localhost:5000/rename-file", {
       method: props.modalMethod,
       body: JSON.stringify({
@@ -48,10 +49,11 @@ export function ReNameModal(props) {
 
     // props.setModalState(false);
     setNewFileName("");
+    props.setModalState(false);
   }
 
   async function addNewDir() {
-    let res = await fetch("http://localhost:5000/rename-file", {
+    let res = await fetch("http://localhost:5000/add-new-dir", {
       method: props.modalMethod,
       body: JSON.stringify({
         path: props.selectedItem.path,
@@ -70,7 +72,8 @@ export function ReNameModal(props) {
   }
 
   async function editDirName() {
-    let res = await fetch("http://localhost:5000/rename-file", {
+    debugger;
+    let res = await fetch("http://localhost:5000/edit-dir-name", {
       method: props.modalMethod,
       body: JSON.stringify({
         path: props.selectedItem.path,
@@ -86,6 +89,7 @@ export function ReNameModal(props) {
 
     // props.setModalState(false);
     setNewFileName("");
+    props.setModalState(false);
   }
 
   async function handleSave() {

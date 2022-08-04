@@ -117,6 +117,7 @@ export function ACEeditor(props) {
         name="UNIQUE_ID_OF_DIV"
         editorProps={{
           $blockScrolling: true,
+        
         }}
         setOptions={{
           enableBasicAutocompletion: true,

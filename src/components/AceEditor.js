@@ -14,6 +14,9 @@ import "ace-builds/src-noconflict/mode-html";
 
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/ext-language_tools";
+import { useDispatch, useSelector } from "react-redux";
+import { setFileContent } from "../stateManagement/nodeSlice";
+import { getFileSystem } from "../utilities/apiCalls";
 
 export const fileSystemTree = atom({
   key: "fileSystem", // unique ID (with respect to other atoms/selectors)
@@ -25,8 +28,11 @@ export const fileSystemTree = atom({
   },
 });
 
-export function ACEeditor() {
+export function ACEeditor(props) {
   const [fileSystem, setFileSystem] = useRecoilState(fileSystemTree);
+  const selectedNode = useSelector((state) => state.nodeSlice.currentNode);
+  const dispatch = useDispatch();
+  const fileContent = useSelector((state) => state.nodeSlice.fileContent);
 
   // useEffect(function () {
   //   async function getFileSystem() {
@@ -39,20 +45,73 @@ export function ACEeditor() {
   //   getFileSystem();
   // }, []);
 
+  const extensionList = {
+    css: "css",
+    js: "javascript",
+    html: "html",
+    css: "css",
+    json: "json",
+    md: "markdown",
+  };
+
   function handleChange() {}
+
+  function handleKeypress() {
+    console.log("##### Key Press #####");
+  }
+
+  function handleAceLoad(editor) {
+    console.log("######## Editor ########");
+    editor.commands.addCommand({
+      name: "save changes",
+      exec: function () {
+        let content = editor.getValue();
+        dispatch(setFileContent(content));
+      },
+
+      bindKey: { win: "ctrl-s" },
+    });
+  }
+  console.log("############## selected node ################");
+  console.log(selectedNode);
+
+  useEffect(
+    function () {
+      async function saveFile() {
+        let res = await fetch("http://localhost:5000/save-file", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fileContent: fileContent,
+            node: selectedNode,
+          }),
+        });
+        let data = await res.json();
+        // dispatch(getFileSystem);
+      }
+
+      saveFile();
+    },
+    [fileContent]
+  );
 
   return (
     <div className="ace-editor">
       <AceEditor
-        value=""
+        onLoad={handleAceLoad}
+        onKeyPress={handleKeypress}
+        value={props.fileContent}
         height="90vh"
-        mode="javascript"
-        fontSize={16}
+        width="80%"
+        mode={extensionList[props.mode]}
+        fontSize={18}
         enableBasicAutocompletion={true}
         enableLiveAutocompletion={true}
         highlightActiveLine={true}
         enableSnippets={true}
-        theme="github"
+        theme="One Dark"
         onChange={handleChange}
         name="UNIQUE_ID_OF_DIV"
         editorProps={{

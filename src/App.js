@@ -38,6 +38,7 @@ import { ReNameModal } from "./components/ReNameModal";
 import { ACEeditor } from "./components/AceEditor";
 import { fileSystemTree } from "./components/AceEditor";
 import { setFileSystem } from "./stateManagement/counterSlice";
+import { setCurrentNode } from "./stateManagement/nodeSlice";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -55,6 +56,7 @@ export default function App() {
   const [modalHeading, setModalHeading] = useState("");
   const [modalMethod, setModalMethod] = useState("");
   const [nodeType, setNodeType] = useState("");
+  const [fileExtension, setFileExtension] = useState("");
 
   const [selectedNode, setSelectedNode] = useState({});
 
@@ -171,6 +173,15 @@ export default function App() {
     );
     let fileContent = await res.json();
     setSelectedFileContent(fileContent);
+    let pathArr = node.path.split("/");
+    let fileName = pathArr[pathArr.length - 1];
+    let fileNameArr = fileName.split(".");
+    let fileExt = fileNameArr[fileNameArr.length - 1];
+    console.log("################# file name arr ################");
+    console.log(fileExt);
+    setFileExtension(fileExt);
+    setSelectedNode(node);
+    dispatch(setCurrentNode(node));
   }
 
   function buildTree(node, level = 1) {
@@ -246,7 +257,7 @@ export default function App() {
         {" "}
         {fileSystem && buildTree(fileSystem)}
       </aside>
-      <ACEeditor />
+      <ACEeditor fileContent={selectedFileContent} mode={fileExtension} />
       <ReNameModal
         isModalOpen={isModalOpen}
         setModalState={setModalOpen}
@@ -255,6 +266,7 @@ export default function App() {
         modalMethod={modalMethod}
         nodeType={nodeType}
       />
+      <aside className="right-aside"> Right side </aside>
     </div>
   );
 }

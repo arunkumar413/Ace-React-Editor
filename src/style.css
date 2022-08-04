@@ -1,18 +1,18 @@
 .grid-container {
   display: grid;
-  grid-template-columns: 2fr 10fr;
+  grid-template-columns: 2fr 10fr 1fr;
   justify-content: center;
   align-items: flex-start;
   font-family: sans-serif;
 }
 
 .sidebar-container {
-  /* display: grid;
-  grid-template-columns: 1fr;
-  justify-content: center;
-  align-items: flex-start; */
   overflow-y: scroll;
   overflow: scroll;
+}
+
+.right-aside {
+  border: solid 1px lightgrey;
 }
 
 .edit-icon {

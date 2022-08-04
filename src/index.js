@@ -9,6 +9,7 @@ import {
 import { createRoot } from "react-dom/client";
 import { fileStore } from "./stateManagement/store";
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
 
@@ -18,9 +19,11 @@ const root = createRoot(rootElement);
 root.render(
   <StrictMode>
     <Provider store={fileStore}>
-      <RecoilRoot>
-        <App />
-      </RecoilRoot>
+      <BrowserRouter>
+        <RecoilRoot>
+          <App />
+        </RecoilRoot>
+      </BrowserRouter>
     </Provider>
   </StrictMode>
 );

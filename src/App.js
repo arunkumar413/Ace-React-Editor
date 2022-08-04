@@ -39,7 +39,7 @@ import { ReNameModal } from "./components/ReNameModal";
 import { ACEeditor } from "./components/AceEditor";
 import { fileSystemTree } from "./components/AceEditor";
 import { setFileSystem } from "./stateManagement/counterSlice";
-import { setCurrentNode } from "./stateManagement/nodeSlice";
+import { setCurrentNode, setFileContent } from "./stateManagement/nodeSlice";
 import { Link } from "react-router-dom";
 
 export default function App() {
@@ -174,7 +174,8 @@ export default function App() {
       }
     );
     let fileContent = await res.json();
-    setSelectedFileContent(fileContent);
+    // setSelectedFileContent(fileContent);
+    dispatch(setFileContent(fileContent));
     let pathArr = node.path.split("/");
     let fileName = pathArr[pathArr.length - 1];
     let fileNameArr = fileName.split(".");

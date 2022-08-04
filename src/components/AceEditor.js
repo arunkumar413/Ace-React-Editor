@@ -90,7 +90,6 @@ export function ACEeditor(props) {
           }),
         });
         let data = await res.json();
-        // dispatch(getFileSystem);
       }
 
       saveFile();
@@ -101,9 +100,10 @@ export function ACEeditor(props) {
   return (
     <div className="ace-editor">
       <AceEditor
+        showPrintMargin={false}
         onLoad={handleAceLoad}
         onKeyPress={handleKeypress}
-        value={props.fileContent}
+        value={fileContent}
         width="100%"
         height="90vh"
         mode={extensionList[props.mode]}

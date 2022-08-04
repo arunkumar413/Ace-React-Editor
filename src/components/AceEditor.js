@@ -17,6 +17,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import { useDispatch, useSelector } from "react-redux";
 import { setFileContent } from "../stateManagement/nodeSlice";
 import { getFileSystem } from "../utilities/apiCalls";
+import { selectedTheme } from "../settingsConfig";
 
 export const fileSystemTree = atom({
   key: "fileSystem", // unique ID (with respect to other atoms/selectors)
@@ -103,15 +104,15 @@ export function ACEeditor(props) {
         onLoad={handleAceLoad}
         onKeyPress={handleKeypress}
         value={props.fileContent}
+        width="100%"
         height="90vh"
-        width="80%"
         mode={extensionList[props.mode]}
         fontSize={18}
         enableBasicAutocompletion={true}
         enableLiveAutocompletion={true}
         highlightActiveLine={true}
         enableSnippets={true}
-        theme="One Dark"
+        theme={selectedTheme}
         onChange={handleChange}
         name="UNIQUE_ID_OF_DIV"
         editorProps={{

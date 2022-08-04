@@ -1,3 +1,4 @@
+import App from "../App";
 import { SettingsPage } from "../pages/settings";
 
 export const routerConfig = [
@@ -6,4 +7,5 @@ export const routerConfig = [
     name: "Settings",
     component: <SettingsPage />,
   },
+  { path: "/", name: "Home", component: <App /> },
 ];

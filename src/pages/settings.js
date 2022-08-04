@@ -1,9 +1,12 @@
 import React from "react";
+import { ReactComponent as SettingsIcon } from "../icons/settingsIcon.svg";
 
 export function SettingsPage(props) {
   return (
     <div className="Settings">
-      <h2> Settings page</h2>
+      <select>
+        <option></option>
+      </select>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 .grid-container {
   display: grid;
-  grid-template-columns: 2fr 10fr 1fr;
+  grid-template-columns: repeat(12, 1fr);
   justify-content: center;
   align-items: flex-start;
   font-family: sans-serif;
@@ -9,6 +9,11 @@
 .sidebar-container {
   overflow-y: scroll;
   overflow: scroll;
+  grid-column: 1/3;
+}
+
+.ace-editor {
+  grid-column: 3/12;
 }
 
 .right-aside {

@@ -33,12 +33,14 @@ import { ReactComponent as EditIcon } from "./icons/editIcon.svg";
 import { ReactComponent as DeleteIcon } from "./icons/deleteIcon.svg";
 import { ReactComponent as FolderPlusIcon } from "./icons/folderPlusIcon.svg";
 import { ReactComponent as FilePlusIcon } from "./icons/filePlusIcon.svg";
+import { ReactComponent as SettingsIcon } from "./icons/settingsIcon.svg";
 
 import { ReNameModal } from "./components/ReNameModal";
 import { ACEeditor } from "./components/AceEditor";
 import { fileSystemTree } from "./components/AceEditor";
 import { setFileSystem } from "./stateManagement/counterSlice";
 import { setCurrentNode } from "./stateManagement/nodeSlice";
+import { Link } from "react-router-dom";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -266,7 +268,11 @@ export default function App() {
         modalMethod={modalMethod}
         nodeType={nodeType}
       />
-      <aside className="right-aside"> Right side </aside>
+      <aside className="right-aside">
+        <Link to="/settings">
+          <SettingsIcon />
+        </Link>
+      </aside>
     </div>
   );
 }

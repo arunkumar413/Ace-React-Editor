@@ -12,6 +12,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
+import { AppRouter } from "./components/AppRouter";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
@@ -21,7 +22,8 @@ root.render(
     <Provider store={fileStore}>
       <BrowserRouter>
         <RecoilRoot>
-          <App />
+          {/* <App /> */}
+          <AppRouter />
         </RecoilRoot>
       </BrowserRouter>
     </Provider>

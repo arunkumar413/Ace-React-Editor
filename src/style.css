@@ -142,3 +142,10 @@
 .file-icon-container {
   display: none;
 }
+
+/* .FindComponent {
+  position: fixed;
+  right: 4%;
+  top: 1%;
+  z-index: 99999;
+} */

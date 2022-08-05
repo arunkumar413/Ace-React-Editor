@@ -1,4 +1,4 @@
-import React, { useEffect, useInsertionEffect, useState } from "react";
+import React, { useEffect, useInsertionEffect, useRef, useState } from "react";
 import "./style.css";
 import AceEditor from "react-ace";
 // import FolderTree, { testData } from "react-folder-tree";
@@ -25,6 +25,7 @@ import { Provider } from "react-redux";
 // import { ReactComponent as EditIcon } from "./icons/editIcon.svg";
 // import {
 //   EditIcon,
+
 //   DeleteIcon,
 //   FolderIcon,
 //   FolderNormalIcon,
@@ -34,6 +35,7 @@ import { ReactComponent as DeleteIcon } from "./icons/deleteIcon.svg";
 import { ReactComponent as FolderPlusIcon } from "./icons/folderPlusIcon.svg";
 import { ReactComponent as FilePlusIcon } from "./icons/filePlusIcon.svg";
 import { ReactComponent as SettingsIcon } from "./icons/settingsIcon.svg";
+import { ReactComponent as SearchIcon } from "./icons/searchIcon.svg";
 
 import { ReNameModal } from "./components/ReNameModal";
 import { ACEeditor } from "./components/AceEditor";
@@ -41,10 +43,15 @@ import { fileSystemTree } from "./components/AceEditor";
 import { setFileSystem } from "./stateManagement/counterSlice";
 import { setCurrentNode, setFileContent } from "./stateManagement/nodeSlice";
 import { Link } from "react-router-dom";
+import { FindComponent } from "./components/FindComponent";
+import { setShowSearchInput } from "./stateManagement/findSlice";
 
 export default function App() {
   const dispatch = useDispatch();
   const fileSystem = useSelector((state) => state.fileSystem.fileSystem);
+  const isShowSearchOn = useSelector(
+    (state) => state.findSlice.showSearchInput
+  );
 
   const [files, setFiles] = useState([
     { fileName: "firstFile.js", content: "first file content" },
@@ -254,6 +261,11 @@ export default function App() {
     [fileSystem]
   );
 
+  function handleSearch() {
+    dispatch(setShowSearchInput());
+    console.log(isShowSearchOn);
+  }
+
   return (
     <div className="grid-container">
       <aside className="sidebar-container">
@@ -269,10 +281,12 @@ export default function App() {
         modalMethod={modalMethod}
         nodeType={nodeType}
       />
+      <FindComponent />
       <aside className="right-aside">
         <Link to="/settings">
           <SettingsIcon />
         </Link>
+        <SearchIcon onClick={handleSearch} />
       </aside>
     </div>
   );

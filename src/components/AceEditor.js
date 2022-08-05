@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   RecoilRoot,
   atom,
@@ -11,6 +11,7 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-css";
 import "ace-builds/src-noconflict/mode-html";
+// import "ace-builds/src-noconflict/ext-searchbox";
 
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/ext-language_tools";
@@ -34,6 +35,8 @@ export function ACEeditor(props) {
   const selectedNode = useSelector((state) => state.nodeSlice.currentNode);
   const dispatch = useDispatch();
   const fileContent = useSelector((state) => state.nodeSlice.fileContent);
+  const findSlice = useSelector((state) => state.findSlice);
+  const aceEditorRef = useRef();
 
   // useEffect(function () {
   //   async function getFileSystem() {
@@ -55,7 +58,7 @@ export function ACEeditor(props) {
     md: "markdown",
   };
 
-  function handleChange() {}
+  function handleChange(editor) {}
 
   function handleKeypress() {
     console.log("##### Key Press #####");
@@ -73,8 +76,6 @@ export function ACEeditor(props) {
       bindKey: { win: "ctrl-s" },
     });
   }
-  console.log("############## selected node ################");
-  console.log(selectedNode);
 
   useEffect(
     function () {
@@ -97,9 +98,18 @@ export function ACEeditor(props) {
     [fileContent]
   );
 
+  // useEffect(
+  //   function () {
+  //     console.log(findSlice);
+  //   }[findSlice]
+  // );
+
+  useEffect(function () {}, [findSlice]);
+
   return (
     <div className="ace-editor">
       <AceEditor
+        ref={aceEditorRef}
         showPrintMargin={false}
         onLoad={handleAceLoad}
         onKeyPress={handleKeypress}
@@ -117,12 +127,12 @@ export function ACEeditor(props) {
         name="UNIQUE_ID_OF_DIV"
         editorProps={{
           $blockScrolling: true,
-        
         }}
         setOptions={{
           enableBasicAutocompletion: true,
           enableLiveAutocompletion: true,
           enableSnippets: true,
+          tabSize: 2,
         }}
       />
     </div>

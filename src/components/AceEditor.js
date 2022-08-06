@@ -8,10 +8,18 @@ import {
 } from "recoil";
 import AceEditor from "react-ace";
 
+// import prettier from "prettier/esm/standalone.mjs";
+// import parserBabel from "prettier/esm/parser-babel.mjs";
+// import parserHtml from "prettier/esm/parser-html.mjs";
+
+import prettier from "prettier";
+
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-css";
 import "ace-builds/src-noconflict/mode-html";
 // import "ace-builds/src-noconflict/ext-searchbox";
+import "ace-builds/src-min-noconflict/ext-searchbox";
+import "ace-builds/src-noconflict/ext-searchbox";
 
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/ext-language_tools";
@@ -37,6 +45,9 @@ export function ACEeditor(props) {
   const fileContent = useSelector((state) => state.nodeSlice.fileContent);
   const findSlice = useSelector((state) => state.findSlice);
   const aceEditorRef = useRef();
+  const formattedCode = useSelector(
+    (state) => state.nodeSlice.formattedContent
+  );
 
   // useEffect(function () {
   //   async function getFileSystem() {
@@ -56,21 +67,34 @@ export function ACEeditor(props) {
     css: "css",
     json: "json",
     md: "markdown",
+    jsx: "jsx",
   };
 
   function handleChange(editor) {}
 
-  function handleKeypress() {
-    console.log("##### Key Press #####");
+  function handleKeypress(evt) {
+    if (evt.ctrlKey && e.which === 83) {
+      console.log(true);
+      e.preventDefault();
+      return false;
+    }
   }
 
   function handleAceLoad(editor) {
     console.log("######## Editor ########");
+    console.log(prettier);
+    console.log(selectedNode);
     editor.commands.addCommand({
       name: "save changes",
       exec: function () {
         let content = editor.getValue();
-        dispatch(setFileContent(content));
+        console.log(prettier);
+        console.log(selectedNode);
+        debugger;
+        let formattedCode = prettier.format(content, {
+          filepath: selectedNode.path,
+        });
+        dispatch(setFileContent(formattedCode));
       },
 
       bindKey: { win: "ctrl-s" },
@@ -104,7 +128,13 @@ export function ACEeditor(props) {
   //   }[findSlice]
   // );
 
-  useEffect(function () {}, [findSlice]);
+  useEffect(
+    function () {
+      console.log(selectedNode);
+    },
+
+    [selectedNode]
+  );
 
   return (
     <div className="ace-editor">
@@ -112,7 +142,6 @@ export function ACEeditor(props) {
         ref={aceEditorRef}
         showPrintMargin={false}
         onLoad={handleAceLoad}
-        onKeyPress={handleKeypress}
         value={fileContent}
         width="100%"
         height="90vh"

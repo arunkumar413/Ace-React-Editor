@@ -144,7 +144,6 @@ export default function App() {
   }
 
   function editNodeName(node, type) {
-    debugger;
     setModalOpen(true);
     node.type === "directory"
       ? setModalHeading("Edit directory name")
@@ -156,7 +155,6 @@ export default function App() {
   }
 
   function addNewNode(node, type) {
-    debugger;
     setModalOpen(true);
     type === "dir"
       ? setModalHeading("Add new directory")
@@ -167,7 +165,6 @@ export default function App() {
   }
 
   async function handleSelectFile(node) {
-    debugger;
     let res = await fetch(
       "http://localhost:5000/get-file-content?path=" + node.path,
       {
@@ -187,8 +184,6 @@ export default function App() {
     let fileName = pathArr[pathArr.length - 1];
     let fileNameArr = fileName.split(".");
     let fileExt = fileNameArr[fileNameArr.length - 1];
-    console.log("################# file name arr ################");
-    console.log(fileExt);
     setFileExtension(fileExt);
     setSelectedNode(node);
     dispatch(setCurrentNode(node));
@@ -287,6 +282,7 @@ export default function App() {
           <SettingsIcon />
         </Link>
         <SearchIcon onClick={handleSearch} />
+        <Link to="/git">Git</Link>
       </aside>
     </div>
   );

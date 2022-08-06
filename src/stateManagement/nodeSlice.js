@@ -10,9 +10,13 @@ export const nodeSlice = createSlice({
     setFileContent: function (state, action) {
       state.fileContent = action.payload;
     },
+    setFormattedContent: function (state, action) {
+      state.formattedContent = action.payload;
+    },
   },
 });
 
 export const nodeSliceReducer = nodeSlice.reducer;
 
-export const { setCurrentNode, setFileContent } = nodeSlice.actions;
+export const { setCurrentNode, setFileContent, setFormattedContent } =
+  nodeSlice.actions;

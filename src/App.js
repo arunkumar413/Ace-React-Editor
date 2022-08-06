@@ -1,9 +1,11 @@
-import React, { useEffect, useInsertionEffect, useState } from "react";
+import React, { useEffect, useInsertionEffect, useRef, useState } from "react";
 import "./style.css";
 import AceEditor from "react-ace";
 // import FolderTree, { testData } from "react-folder-tree";
 // "react-folder-tree": "^5.0.3"
 import { useSelector, useDispatch } from "react-redux";
+import { getFileSystem } from "./utilities/apiCalls";
+import uuid from "react-uuid";
 
 import {
   UncontrolledTreeEnvironment,
@@ -20,16 +22,36 @@ import {
 import "react-complex-tree/lib/style.css";
 // import { store } from "./app/store";
 import { Provider } from "react-redux";
-import { ReactComponent as DeleteIcon } from "./icons/deleteIcon.svg";
+// import { ReactComponent as EditIcon } from "./icons/editIcon.svg";
+// import {
+//   EditIcon,
+
+//   DeleteIcon,
+//   FolderIcon,
+//   FolderNormalIcon,
+// } from "./components/icons";
 import { ReactComponent as EditIcon } from "./icons/editIcon.svg";
+import { ReactComponent as DeleteIcon } from "./icons/deleteIcon.svg";
+import { ReactComponent as FolderPlusIcon } from "./icons/folderPlusIcon.svg";
+import { ReactComponent as FilePlusIcon } from "./icons/filePlusIcon.svg";
+import { ReactComponent as SettingsIcon } from "./icons/settingsIcon.svg";
+import { ReactComponent as SearchIcon } from "./icons/searchIcon.svg";
 
 import { ReNameModal } from "./components/ReNameModal";
 import { ACEeditor } from "./components/AceEditor";
 import { fileSystemTree } from "./components/AceEditor";
-import { getFileSystem } from "./stateManagement/counterSlice";
+import { setFileSystem } from "./stateManagement/counterSlice";
+import { setCurrentNode, setFileContent } from "./stateManagement/nodeSlice";
+import { Link } from "react-router-dom";
+import { FindComponent } from "./components/FindComponent";
+import { setShowSearchInput } from "./stateManagement/findSlice";
 
 export default function App() {
   const dispatch = useDispatch();
+  const fileSystem = useSelector((state) => state.fileSystem.fileSystem);
+  const isShowSearchOn = useSelector(
+    (state) => state.findSlice.showSearchInput
+  );
 
   const [files, setFiles] = useState([
     { fileName: "firstFile.js", content: "first file content" },
@@ -40,19 +62,12 @@ export default function App() {
   const [selectedFileContent, setSelectedFileContent] = useState("");
   const [fileIndex, setFileIndex] = useState(0);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedNode, setSelectedNode] = useState({});
-  const fileSystem = useRecoilValue(fileSystemTree);
+  const [modalHeading, setModalHeading] = useState("");
+  const [modalMethod, setModalMethod] = useState("");
+  const [nodeType, setNodeType] = useState("");
+  const [fileExtension, setFileExtension] = useState("");
 
-  function handleChange(newCode) {
-    const newState = files.map(function (item, index) {
-      if (item.fileName === selectedFile) {
-        return { ...item, content: newCode };
-      } else {
-        return item;
-      }
-    });
-    setFiles(newState);
-  }
+  const [selectedNode, setSelectedNode] = useState({});
 
   function handleFileClick(item, index, evt) {
     setFileIndex(index);
@@ -60,171 +75,215 @@ export default function App() {
 
   function onTreeStateChange(state) { }
 
-  const asideElements = files.map(function (item, index) {
-    return (
-      <span
-        name={item.fileName}
-        onClick={(evt) => handleFileClick(item, index, evt)}
-        key={index.toString()}>
-        {" "}
-        {item.fileName}{" "}
-      </span>
-    );
-  });
-
   var elements = [];
   var count = 0;
 
-  function handleFileHover(evt, tree) {
-    console.log(tree.id);
-    let editIcon = document.querySelector("#" + "edit" + tree.id);
-    let delIcon = document.querySelector("#" + "del" + tree.id);
-    editIcon.style.display = "inline";
-    delIcon.style.display = "inline";
-    // let editClass = ".edit-icon".concat(".", tree.id);
-    // let delClass = ".delete-icon".concat(".", tree.id);
-    // let editIcon = document.querySelector(editClass);
-
-    // let delIcon = document.querySelector(delClass);
-
-    // editIcon.style.display = "inline";
-    // delIcon.style.display = "inline";
-  }
-
-  function handleMouseOut(evt, tree) {
-    console.log("mouse out");
-    evt.stopPropagation(); // Prevent the event from propagating to other elements
-
-    let editIcon = document.querySelector("#" + "edit" + tree.id);
-    let delIcon = document.querySelector("#" + "del" + tree.id);
-    editIcon.style.display = "none";
-    delIcon.style.display = "none";
-
-    let inp = document.querySelector("#" + "input" + tree.id);
-    inp.style.display = "none";
-    let nameSpan = document.querySelector("#" + "name" + tree.id);
-    nameSpan.style.display = "inline";
-    evt.stopPropagation(); // Prevent the event from propagating to other elements
-  }
-
   function handleEditFileName(evt, tree) {
-    console.log("clicked");
     evt.stopPropagation();
     evt.preventDefault();
 
     setSelectedNode(tree);
-    console.log(tree.type);
     setModalOpen(true);
-    // let inp = document.querySelector("#" + "input" + tree.id);
-    // inp.style.display = "inline";
-    // let nameSpan = document.querySelector("#" + "name" + tree.id);
-    // nameSpan.style.display = "none";
   }
 
-  function stopPropagation(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
+  function expandNode(evt, node) {
+    var visibility = evt.target.parentElement.nextElementSibling.style.display;
+    var chidlren = evt.target.parentElement.nextElementSibling;
+
+    switch (visibility) {
+      case "none":
+        chidlren.style.display = "block";
+        evt.target.innerText = " - ";
+        break;
+      case "block":
+        chidlren.style.display = "none";
+        evt.target.innerText = " + ";
+
+        break;
+      case "":
+        chidlren.style.display = "none";
+        evt.target.innerText = " + ";
+
+        break;
+      default:
+        break;
+    }
   }
 
-  function parse(tree) {
-    count = +1;
+  function handleDirHover(evt, node) {
+    if (evt.target == evt.currentTarget) {
+      evt.target.children[1].style.display = "inline";
+    }
+  }
 
-    if (tree.type === "file") {
-      elements.push(
+  function handleKeydown(evt) {
+    if (evt.key === "Escape") {
+    }
+  }
+
+  function hideIconContainer(evt) {
+    let containers = document.querySelectorAll(".icon-container");
+    containers.forEach(function (item) {
+      item.style.display = "none";
+    });
+  }
+
+  function handleDisplayFileIcons(evt) {
+    evt.target.children[0].style.display = "inline";
+  }
+
+  function hideFileIcons(evt) {
+    let iconsboxes = document.querySelectorAll(".file-icon-container");
+    iconsboxes.forEach(function (item) {
+      item.style.display = "none";
+    });
+  }
+
+  function addNewFile(node) {
+    debugger;
+  }
+
+  function editNodeName(node, type) {
+    setModalOpen(true);
+    node.type === "directory"
+      ? setModalHeading("Edit directory name")
+      : setModalHeading("Edit file name");
+
+    setSelectedNode(node);
+    setModalMethod("PUT");
+    setNodeType(type);
+  }
+
+  function addNewNode(node, type) {
+    setModalOpen(true);
+    type === "dir"
+      ? setModalHeading("Add new directory")
+      : setModalHeading("Add new File");
+    setSelectedNode(node);
+    setModalMethod("POST");
+    setNodeType(type);
+  }
+
+  async function handleSelectFile(node) {
+    let res = await fetch(
+      "http://localhost:5000/get-file-content?path=" + node.path,
+      {
+        method: "GET",
+        // body: JSON.stringify({
+        //   path: node.path,
+        // }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    let fileContent = await res.json();
+    // setSelectedFileContent(fileContent);
+    dispatch(setFileContent(fileContent));
+    let pathArr = node.path.split("/");
+    let fileName = pathArr[pathArr.length - 1];
+    let fileNameArr = fileName.split(".");
+    let fileExt = fileNameArr[fileNameArr.length - 1];
+    setFileExtension(fileExt);
+    setSelectedNode(node);
+    dispatch(setCurrentNode(node));
+  }
+
+  function buildTree(node, level = 1) {
+    if (node.type === "directory") {
+      const children = node.children.map((x) => buildTree(x, level + 1));
+      // let id = uuid();
+
+      return (
         <div
-          onMouseOver={(evt) => handleFileHover(evt, tree)}
-          onMouseOut={(evt) => handleMouseOut(evt, tree)}
-          className={`file ${tree.id}`}
-          key={tree.id}
-          style={{
-            paddingLeft: count * 5 + 5,
-          }}>
-          <span className={`file-actions ${tree.id}`}>
-            <span id={"name" + tree.id} className={`file-name ${tree.id}`}>
-              {" "}
-              {tree.name}{" "}
-            </span>
-            <input
-              type="text"
-              id={"input" + tree.id}
-              className="input-rename"
-            />
+          id={node.id}
+          key={node.id}
+          style={{ paddingLeft: level * 10, width: "100%" }}
+          className="dir"
+        >
+          <span
+            onMouseOver={(evt) => handleDirHover(evt, node)}
+            onMouseLeave={(evt) => hideIconContainer(evt, node)}
+            className="dir-heading"
+          >
+            <span onClick={(evt) => expandNode(evt, node)}>{"+"}</span>
+            {node.name}
+            <span className="icon-container">
+              <FolderPlusIcon onClick={(evt) => addNewNode(node, "dir")} />
+              <FilePlusIcon onClick={(evt) => addNewNode(node, "file")} />
 
-            <EditIcon
-              id={"edit" + tree.id}
-              style={{ display: "none" }}
-              className={`edit-icon ${tree.id}`}
-              onClick={(evt) => handleEditFileName(evt, tree)}
-            />
-            <DeleteIcon
-              id={"del" + tree.id}
-              style={{ display: "none" }}
-              className={`delete-icon ${tree.id}`}
-              onClick={(evt) => deleteItem(evt, tree)}
-            />
+              <EditIcon onClick={(evt) => editNodeName(node, "dir")} />
+              <DeleteIcon />
+            </span>
           </span>
+          <div className="children">{children}</div>
         </div>
       );
-    } else if (tree.type === "directory") {
-      elements.push(
+    } else if (node.type === "file") {
+      return (
         <div
-          onMouseOver={(evt) => handleFileHover(evt, tree)}
-          onMouseOut={(evt) => handleMouseOut(evt, tree)}
-          className={`dir ${tree.id}`}
-          key={tree.id}
-          style={{ paddingLeft: count * 5 }}>
-          {" "}
-          <span className={`file-actions ${tree.id}`}>
-            <span id={"name" + tree.id} className={`dir-name ${tree.id}`}>
-              {" "}
-              {tree.name}{" "}
-            </span>
+          onClick={(evt) => handleSelectFile(node)}
+          key={uuid()}
+          style={{ paddingLeft: level * 10 + 5 }}
+          onMouseEnter={handleDisplayFileIcons}
+          onMouseLeave={hideFileIcons}
+          className="file"
+        >
+          {node.name}
+          <span className="file-icon-container">
+            {/* <FolderPlusIcon onClick={(evt) => addNewNode(node, "dir")} />
+            <FilePlusIcon onClick={(evt) => addNewNode(node, "file")} /> */}
 
-            <input
-              id={"input" + tree.id}
-              onKeyDown={(evt) => handleKeyEvent(evt, tree)}
-              className={`input-rename ${tree.id} rename-input`}
-            />
-
-            <EditIcon
-              id={"edit" + tree.id}
-              style={{ display: "none" }}
-              onClick={(evt) => handleEditFileName(evt, tree)}
-              className={`edit-icon ${tree.id}`}
-            />
-            <DeleteIcon
-              id={"del" + tree.id}
-              style={{ display: "none" }}
-              onClick={(evt) => deleteItem(evt, tree)}
-              className={`delete-icon ${tree.id}`}
-            />
+            <EditIcon onClick={(evt) => editNodeName(node, "file")} />
+            <DeleteIcon />
           </span>
         </div>
       );
     }
-
-    if (tree.children && tree.children.length) {
-      tree.children.forEach(function (item) {
-        parse(item);
-      });
-    }
   }
-
-  parse(fileSystem);
 
   useEffect(function () {
-    dispatch(getFileSystem());
+    getFileSystem().then(function (data) {
+      dispatch(setFileSystem(data));
+    });
   }, []);
+
+  useEffect(
+    function () {
+      console.log("$$$$$$$$$$app-state");
+      console.log(fileSystem);
+    },
+    [fileSystem]
+  );
+
+  function handleSearch() {
+    dispatch(setShowSearchInput());
+    console.log(isShowSearchOn);
+  }
 
   return (
     <div className="grid-container">
-      <aside className="sidebar-container">{elements}</aside>
-      <ACEeditor />
+      <aside className="sidebar-container">
+        {" "}
+        {fileSystem && buildTree(fileSystem)}
+      </aside>
+      <ACEeditor fileContent={selectedFileContent} mode={fileExtension} />
       <ReNameModal
         isModalOpen={isModalOpen}
         setModalState={setModalOpen}
         selectedItem={selectedNode}
+        modalHeading={modalHeading}
+        modalMethod={modalMethod}
+        nodeType={nodeType}
       />
+      <FindComponent />
+      <aside className="right-aside">
+        <Link to="/settings">
+          <SettingsIcon />
+        </Link>
+        <SearchIcon onClick={handleSearch} />
+        <Link to="/git">Git</Link>
+      </aside>
     </div>
   );
 }

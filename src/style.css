@@ -21,6 +21,8 @@ body {
 
 .right-aside {
   text-align: center;
+  display: grid;
+  justify-content: center;
 }
 
 .edit-icon {

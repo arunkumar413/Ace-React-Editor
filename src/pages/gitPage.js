@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { CommitHistory } from "../components/git/commitHistory";
 import { GitChanges } from "../components/git/gitChanges";
 import { GitInit } from "../components/git/gitInit";
 import {
@@ -9,11 +10,11 @@ import {
 } from "../stateManagement/gitSlice";
 
 export function GitPage() {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState("commit");
 
   const pageComponents = [
     { name: "initGit", component: <GitInit /> },
-    { name: "commit", component: <GitChanges /> },
+    { name: "commit", component: <CommitHistory /> },
   ];
 
   function handleSelect(evt, item) {

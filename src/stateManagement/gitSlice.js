@@ -20,7 +20,11 @@ export const gitSlice = createSlice({
 });
 
 export const gitSliceReducer = gitSlice.reducer;
-export const { setGitDirLocation, setGitCloneLink, setValue } =
-  gitSlice.actions;
-export const commitHistory = (state) => state.getSlice.commitHistory;
+export const {
+  setGitDirLocation,
+  setGitCloneLink,
+  setValue,
+  setCommitHistory,
+} = gitSlice.actions;
+export const commitHistory = (state) => state.gitSlice.commitHistory;
 export const val = (state) => state.getSlice.value;

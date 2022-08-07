@@ -34,21 +34,20 @@ export function GitInit() {
   );
 
   return (
-    <div className="GitPage">
+    <div className="GitInit">
       <h2> Git Operations</h2>
       <p>No git found </p>
-      <h6> {val}</h6>
+      <h6> </h6>
       <div
         style={{
-          width: "50%",
           display: "grid",
           gridTemplateColumns: "1fr",
           justifyContent: "flex-start",
           alignItems: "center",
-          gap: "1rem",
           textAlign: "left",
           boxShadow: "5px 5px 5px 5px lightgrey",
-          padding: "0.5rem",
+          padding: "10px",
+          gap: "10px",
         }}
       >
         <h4> Initialize Git</h4>
@@ -60,10 +59,7 @@ export function GitInit() {
           type="text"
           onChange={handleDirChange}
         />
-        <button
-          onClick={handleInitialize}
-          className="GitPage btn primary round"
-        >
+        <button onClick={handleInitialize} className="btn primary">
           {" "}
           Initialize and open
         </button>{" "}

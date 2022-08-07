@@ -26,9 +26,14 @@ export function CommitHistory() {
   function buildElements() {
     const historyElements = history.map(function (item, index) {
       return (
-        <p key={index.toString()}>
-          {item.commit.message} ({item.commit.author.name}){" "}
-        </p>
+        <React.Fragment key={index.toString()}>
+          <span>{item.commit.message} </span>
+          <span>{item.commit.author.name}</span>
+          <span>{item.commit.author.email}</span>
+          <span>
+            {new Date(item.commit.author.timestamp * 1000).toString()}
+          </span>
+        </React.Fragment>
       );
     });
     return historyElements;
@@ -43,15 +48,19 @@ export function CommitHistory() {
         style={{
           width: "100%",
           display: "grid",
-          gridTemplateColumns: "1fr",
-          justifyContent: "center",
-          textAlign: "left",
-          gap: "10px",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          fontSize: "0.8rem",
         }}
       >
         {" "}
+        <span className="commit-heading">Message</span>
+        <span className="commit-heading">Author</span>
+        <span className="commit-heading">Email</span>
+        <span className="commit-heading">Date</span>
+        {history && history.length ? buildElements() : ""}
       </div>
-      {history && history.length ? buildElements() : ""}
     </div>
   );
 }

@@ -188,3 +188,20 @@ body {
   grid-row: 1/12;
   text-align: left;
 }
+
+.commit-item {
+  padding: 5px;
+}
+
+.commit-item:hover {
+  padding: 5px;
+  background-color: lightgrey;
+}
+
+.commit-heading {
+  border-top: solid 1px gray;
+  border-bottom: solid 1px gray;
+  padding: 5px;
+  font-weight: bold;
+  border-left: solid 1px gray;
+}

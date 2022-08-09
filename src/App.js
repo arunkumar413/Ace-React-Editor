@@ -73,7 +73,7 @@ export default function App() {
     setFileIndex(index);
   }
 
-  function onTreeStateChange(state) { }
+  function onTreeStateChange(state) {}
 
   var elements = [];
   var count = 0;
@@ -243,6 +243,7 @@ export default function App() {
   }
 
   useEffect(function () {
+    debugger;
     getFileSystem().then(function (data) {
       dispatch(setFileSystem(data));
     });

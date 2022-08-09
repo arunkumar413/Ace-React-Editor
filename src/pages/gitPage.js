@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { CommitHistory } from "../components/git/commitHistory";
 import { GitChanges } from "../components/git/gitChanges";
 import { GitInit } from "../components/git/gitInit";
+import { Projects } from "../components/git/projects";
 import {
   setDirLocation,
   setGitCloneLink,
@@ -15,6 +16,7 @@ export function GitPage() {
   const pageComponents = [
     { name: "initGit", component: <GitInit /> },
     { name: "commit", component: <CommitHistory /> },
+    { name: "projects", component: <Projects /> },
   ];
 
   function handleSelect(evt, item) {
@@ -24,6 +26,7 @@ export function GitPage() {
   const sidebarItems = [
     { name: "initGit", value: "Initialize git" },
     { value: "Commit history", name: "commit" },
+    { name: "projects", value: "Projects" },
   ];
 
   const sidebarElements = sidebarItems.map(function (item, index) {

@@ -10,12 +10,17 @@ export function CommitHistory() {
   const history = useSelector(commitHistory);
   useEffect(function () {
     async function getCommitHistory() {
-      let res = await fetch("http://localhost:5000/git/commit-history", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      let project = localStorage.getItem("currentProject");
+      let res = await fetch(
+        "http://localhost:5000/git/commit-history?" +
+          new URLSearchParams({ project: project }),
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       let data = await res.json();
       dispatch(setCommitHistory(data));

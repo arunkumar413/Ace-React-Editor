@@ -41,6 +41,7 @@ export const themes = [
 export const selectedTheme = "monokai";
 
 export const projectsList = [
+  "/home/arun/projects/test-project",
   "/home/arun/projects/openAPI-document-generator",
   "/home/projects/project-one",
   "/home/projects/project-two",

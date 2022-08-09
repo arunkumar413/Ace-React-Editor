@@ -16,6 +16,9 @@ export const gitSlice = createSlice({
     setValue: function (state, action) {
       state.value = 6;
     },
+    setGitStatus: function (state, action) {
+      state.gitStatus = action.payload;
+    },
   },
 });
 
@@ -25,6 +28,9 @@ export const {
   setGitCloneLink,
   setValue,
   setCommitHistory,
+  setGitStatus,
 } = gitSlice.actions;
 export const commitHistory = (state) => state.gitSlice.commitHistory;
+export const gitStatus = (state) => state.gitSlice.gitStatus;
+
 export const val = (state) => state.getSlice.value;

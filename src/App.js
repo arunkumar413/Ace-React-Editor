@@ -206,7 +206,7 @@ export default function App() {
             onMouseLeave={(evt) => hideIconContainer(evt, node)}
             className="dir-heading"
           >
-            <span onClick={(evt) => expandNode(evt, node)}>{"+"}</span>
+            <span onClick={(evt) => expandNode(evt, node)}>{"-"}</span>
             {node.name}
             <span className="icon-container">
               <FolderPlusIcon onClick={(evt) => addNewNode(node, "dir")} />
@@ -243,7 +243,6 @@ export default function App() {
   }
 
   useEffect(function () {
-    debugger;
     getFileSystem().then(function (data) {
       dispatch(setFileSystem(data));
     });

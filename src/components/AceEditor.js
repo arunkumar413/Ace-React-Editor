@@ -18,7 +18,7 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-css";
 import "ace-builds/src-noconflict/mode-html";
 // import "ace-builds/src-noconflict/ext-searchbox";
-import "ace-builds/src-min-noconflict/ext-searchbox";
+// import "ace-builds/src-min-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/ext-searchbox";
 
 import "ace-builds/src-noconflict/theme-github";
@@ -49,17 +49,6 @@ export function ACEeditor(props) {
     (state) => state.nodeSlice.formattedContent
   );
 
-  // useEffect(function () {
-  //   async function getFileSystem() {
-  //     let res = await fetch("http://localhost:5000/getdirtree");
-  //     let data = await res.json();
-
-  //     setFileSystem(data);
-  //   }
-
-  //   getFileSystem();
-  // }, []);
-
   const extensionList = {
     css: "css",
     js: "javascript",
@@ -81,51 +70,50 @@ export function ACEeditor(props) {
   }
 
   function handleAceLoad(editor) {
-    console.log("######## Editor ########");
-    console.log(prettier);
-    console.log(selectedNode);
     editor.commands.addCommand({
       name: "save changes",
-      exec: function () {
+      exec: async function (editor) {
         let content = editor.getValue();
-        console.log(prettier);
-        console.log(selectedNode);
-        debugger;
-        let formattedCode = prettier.format(content, {
-          filepath: selectedNode.path,
-        });
-        dispatch(setFileContent(formattedCode));
-      },
-
-      bindKey: { win: "ctrl-s" },
-    });
-  }
-
-  useEffect(
-    function () {
-      async function saveFile() {
+        // let formattedCode = prettier.format(content, {
+        //   filepath: selectedNode.path,
+        // });
+        dispatch(setFileContent(content));
         let res = await fetch("http://localhost:5000/save-file", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            fileContent: fileContent,
+            fileContent: content,
             node: selectedNode,
           }),
         });
         let data = await res.json();
-      }
+      },
 
-      saveFile();
-    },
-    [fileContent]
-  );
+      bindKey: { win: "ctrl-s" },
+    });
+  }
 
   // useEffect(
   //   function () {
-  //     console.log(findSlice);
-  //   }[findSlice]
+  //     async function saveFile() {
+  //       let res = await fetch("http://localhost:5000/save-file", {
+  //         method: "PUT",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           fileContent: fileContent,
+  //           node: selectedNode,
+  //         }),
+  //       });
+  //       let data = await res.json();
+  //     }
+
+  //     saveFile();
+  //   },
+  //   [fileContent]
   // );
 
   useEffect(

@@ -24,7 +24,7 @@ import "ace-builds/src-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/ext-language_tools";
 import { useDispatch, useSelector } from "react-redux";
-import { setFileContent } from "../stateManagement/nodeSlice";
+import { setCurrentNode, setFileContent } from "../stateManagement/nodeSlice";
 import { getFileSystem } from "../utilities/apiCalls";
 import { selectedTheme } from "../settingsConfig";
 
@@ -85,7 +85,7 @@ export function ACEeditor(props) {
           },
           body: JSON.stringify({
             fileContent: content,
-            node: selectedNode,
+            node: JSON.parse(localStorage.getItem("selectedNode")),
           }),
         });
         let data = await res.json();
@@ -119,6 +119,8 @@ export function ACEeditor(props) {
   useEffect(
     function () {
       console.log(selectedNode);
+      selectedNode &&
+        localStorage.setItem("selectedNode", JSON.stringify(selectedNode));
     },
 
     [selectedNode]

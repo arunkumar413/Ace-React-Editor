@@ -22,7 +22,6 @@ root.render(
     <Provider store={fileStore}>
       <BrowserRouter>
         <RecoilRoot>
-          {/* <App /> */}
           <AppRouter />
         </RecoilRoot>
       </BrowserRouter>

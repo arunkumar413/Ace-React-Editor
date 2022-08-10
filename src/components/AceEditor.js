@@ -74,17 +74,17 @@ export function ACEeditor(props) {
       name: "save changes",
       exec: async function (editor) {
         let content = editor.getValue();
-        // let formattedCode = prettier.format(content, {
-        //   filepath: selectedNode.path,
-        // });
-        dispatch(setFileContent(content));
+        let formattedCode = prettier.format(content, {
+          filepath: JSON.parse(localStorage.getItem("selectedNode")).path,
+        });
+        dispatch(setFileContent(formattedCode));
         let res = await fetch("http://localhost:5000/save-file", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            fileContent: content,
+            fileContent: formattedCode,
             node: JSON.parse(localStorage.getItem("selectedNode")),
           }),
         });

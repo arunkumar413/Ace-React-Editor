@@ -28,18 +28,8 @@ import { setCurrentNode, setFileContent } from "../stateManagement/nodeSlice";
 import { getFileSystem } from "../utilities/apiCalls";
 import { selectedTheme } from "../settingsConfig";
 
-export const fileSystemTree = atom({
-  key: "fileSystem", // unique ID (with respect to other atoms/selectors)
-  default: function () {
-    let res = fetch("http://localhost:5000/getdirtree");
-    let data = res.json();
-
-    setFileSystem(data);
-  },
-});
-
 export function ACEeditor(props) {
-  const [fileSystem, setFileSystem] = useRecoilState(fileSystemTree);
+  // const [fileSystem, setFileSystem] = useRecoilState(fileSystemTree);
   const selectedNode = useSelector((state) => state.nodeSlice.currentNode);
   const dispatch = useDispatch();
   const fileContent = useSelector((state) => state.nodeSlice.fileContent);
@@ -74,21 +64,24 @@ export function ACEeditor(props) {
       name: "save changes",
       exec: async function (editor) {
         let content = editor.getValue();
-        let formattedCode = prettier.format(content, {
-          filepath: JSON.parse(localStorage.getItem("selectedNode")).path,
-        });
-        dispatch(setFileContent(formattedCode));
+        // let formattedCode = prettier.format(content, {
+        //   filepath: JSON.parse(localStorage.getItem("selectedNode")).path,
+        //   parser: "babel",
+        // });
+        // dispatch(setFileContent(formattedCode));
         let res = await fetch("http://localhost:5000/save-file", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            fileContent: formattedCode,
+            fileContent: content,
             node: JSON.parse(localStorage.getItem("selectedNode")),
           }),
         });
         let data = await res.json();
+
+        dispatch(setFileContent(data));
       },
 
       bindKey: { win: "ctrl-s" },
